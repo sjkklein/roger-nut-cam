@@ -1,0 +1,30 @@
+@startuml
+
+package raspberry-pi {
+  object webcam {
+  	off the shelf
+  }
+  object nut_dispenser
+}
+
+package server {
+	object website_templates {
+		this will be the primary place
+		for HTML and JS code. 
+	}
+	object flask {
+		backend, likely with webcam plugin
+	}
+	object nut_dispenser_controller
+	nut_dispenser_controller <-up-> nut_dispenser: text over TCP
+	flask <-up-> webcam: hopefully this part is easy
+	website_templates -up-> flask :jinja templates
+	nut_dispenser_controller <-> flask
+}
+
+package client {
+	object website
+	flask <-down-> website: html and javascript pages
+}
+
+@enduml
