@@ -1,26 +1,32 @@
 @startuml
 
-package raspberry-pi {
-  object webcam {
-  	off the shelf
+package perch-device {
+  package chromebook {
+  	object built_in_camera
+  	object usb
+  	package web-server {
+		  object website_templates {
+				this will be the primary place
+				for HTML and JS code. 
+			}
+			object flask {
+				backend, likely with webcam plugin
+			}
+			object nut_dispenser_controller
+			nut_dispenser_controller <-up-> usb
+			flask <-up-> built_in_camera: hopefully this part is easy
+			website_templates -up-> flask :jinja templates
+			nut_dispenser_controller <-> flask
+  	}
+
   }
-  object nut_dispenser
+  object nut_dispenser {
+  	likely an arduino, power supply,
+  	solenoid, and a relay
+  }
+  usb <-> nut_dispenser
 }
 
-package server {
-	object website_templates {
-		this will be the primary place
-		for HTML and JS code. 
-	}
-	object flask {
-		backend, likely with webcam plugin
-	}
-	object nut_dispenser_controller
-	nut_dispenser_controller <-up-> nut_dispenser: text over TCP
-	flask <-up-> webcam: hopefully this part is easy
-	website_templates -up-> flask :jinja templates
-	nut_dispenser_controller <-> flask
-}
 
 package client {
 	object website
