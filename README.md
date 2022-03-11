@@ -8,7 +8,9 @@ The goal here is to have a simple web page with a self hosted server.
 
 ## repo organization
 
-All code is in the source directory. This will include the web app and the arduino code for the nut roller. 
+All code is in the `source` directory. This will include the web app and the arduino code for the nut roller. 
+
+Documentation --other than this readme-- is in the `doc` directory. All diagrams are generated from there.
 
 ## setting up the environment
 
