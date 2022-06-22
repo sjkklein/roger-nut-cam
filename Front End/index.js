@@ -1,30 +1,27 @@
+if (process.env.NODE_ENV !== 'production') { //loads env variables if app not in development
+  require('dotenv').config()
+}
 
 //Required External Modules
 
-const express = require("express");
-const path = require("path");
-const bcrypt = require("bcrypt")
-
+const express = require('express')
 const app = express()
+const path = require('path')
+const bcrypt = require('bcrypt')
+const passport = require('passport')
+const flash = require('express-flash')
+const session = require('express-session')
+const methodOverride = require('method-override')
 
-app.use(express.json()) //allows app to accept JSON
+const initializePassport = require('./passport-config')
+initializePassport(
+  passport, 
+  email => users.find(user => user.email === email),
+  id => users.find(user => user.id === id)
+)
 
-//User Capture
-const users = []
-app.post('/users', async (req, res) => { //bcrypt is async library
-  try {
-    const salt = await bcrypt.genSalt() //default salt is 10
-    const hashedPassword = await bcrypt.hash(req.body.password, salt)
-    const user = { name: req.body.name, password: hashedPassword }
-    console.log(salt)
-    console.log(hashedPassword)
-    users.push(user)
-    res.status(201).send()
-  } catch {
-    res.status(500).send()
-  }
- 
-})
+//User Setup & Caoture
+const users = [] //local var for dev ONLY; will need to redirect registration to database
 
 //Express Public Directory
 app.use(express.static(path.join(__dirname, 'public')))
@@ -38,39 +35,76 @@ app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'))
 
-app.get('/users', (req, res) => {
-  res.json(users)
-})
+//Takes Inputs from Forms for Post Methods
+app.use(express.urlencoded({ extended: false }))
 
-//Authentication Check
-app.post('/users/home', async (req, res) => {
-  const user = users.find(user => user.name = req.body.name)
-  if (user == null) {
-    return res.status(400).send('Cannot find user!')
-  }
-  try {
-    if (await bcrypt.compare(req.body.password, user.password)) {
-      res.send('Success')
-    } else {
-      res.send('Incorrect Password')
-    }
-  } catch {
-    res.status(500).send()
-  }
-})
+app.use(flash())
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false, //resaves if something has changed in session
+  saveUninitialized: false //don't want to save empty values in session
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(methodOverride('_method'))
 
 //Get Rendering
-app.get('/home', (req, res) => {
+app.get('/', checkAuthenticated, (req, res) => {
     res.render('home')
 })
+
+app.get('/login', checkNotAuthenticated, (req, res) => {
+    res.render('login')
+})
+
+app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/login',
+  failureFlash: true
+}))
 
 app.get('/passForgot', (req, res) => {
     res.render('passForgot')
 })
 
-app.get('/register', (req, res) => {
+app.get('/register', checkNotAuthenticated, (req, res) => {
     res.render('register')
 })
+
+app.post('/register', checkNotAuthenticated, async (req, res) => { //bcrypt is async library
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10)   
+    users.push({
+      id: Date.now().toString(),
+      fName: req.body.firstName,
+      lName: req.body.lastName,
+      email: req.body.email,
+      password: hashedPassword
+    })
+    res.redirect('/login')
+  } catch {
+    res.redirect('/register')
+  }
+})
+
+app.delete('/logout', (req, res) => {
+  req.logOut()
+  res.redirect('/login')
+})
+
+function checkAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next()
+  }
+  res.redirect('/login')
+}
+
+function checkNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return res.redirect('/')
+  } 
+  next()
+}
 
 app.listen('3000')
 
