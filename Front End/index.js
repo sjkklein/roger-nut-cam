@@ -43,7 +43,7 @@ app.get('/users', (req, res) => {
 })
 
 //Authentication Check
-app.post('/users/login', async (req, res) => {
+app.post('/users/home', async (req, res) => {
   const user = users.find(user => user.name = req.body.name)
   if (user == null) {
     return res.status(400).send('Cannot find user!')
@@ -59,8 +59,17 @@ app.post('/users/login', async (req, res) => {
   }
 })
 
-app.get('/login', (req, res) => {
+//Get Rendering
+app.get('/home', (req, res) => {
     res.render('home')
+})
+
+app.get('/passForgot', (req, res) => {
+    res.render('passForgot')
+})
+
+app.get('/register', (req, res) => {
+    res.render('register')
 })
 
 app.listen('3000')

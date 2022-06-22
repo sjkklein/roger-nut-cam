@@ -1,4 +1,22 @@
-#passwordForget:hover {
+html {
+   height: 100%;
+}
+
+body {
+   min-height: 100vh;
+}
+
+input {
+   text-align: center;
+}
+
+a {
+   color:greenyellow;
+   cursor: pointer;
+   padding: 1rem;
+}
+
+a:hover {
    color: yellow;
 }
 
@@ -15,6 +33,14 @@
    color: greenyellow;
    transition: 0.5s;
    max-width: 540px;
+}
+
+.navbar-dark {
+   --bs-navbar-brand-color: greenyellow;
+}
+
+.navbar-nav {
+   --bs-nav-link-color: greenyellow;
 }
 
 

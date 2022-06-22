@@ -1,7 +1,5 @@
 <%- include('partials/head') %> 
 
-
-
 <div id="login" class="container align-items-center justify-content-center">
     <h1 class="text-center">Roger's Nut Cam</h1>
     <form class="form-group text-center">
@@ -13,20 +11,13 @@
             <label for="exampleInputPassword1" class="form-label">Password</label>
             <input type="password" class="form-control" id="exampleInputPassword1">
         </div>
-        <a style="cursor: pointer" id="passwordForget">Forgot password?</a>
+        <a id="passwordForget" href="/passForgot">Forgot password?</a>
+        <br>
+        <a id="register" href="/register">Register</a>
         <br>
         <br>
-        <button id="submit" type="submit" class="btn btn-success">Submit</button>
+        <button id="submit" type="submit" class="btn btn-success" >Submit</button>
     </form>
 </div>
-
-<script>
-    const forgot = document.getElementById('passwordForget')
-    forgot.addEventListener('click', (e) => {
-    e.preventDefault()
-    alert("Whoops! You'll have to text/call me!")
-})
-</script>
-
 
 <%- include('partials/footer') %> 
