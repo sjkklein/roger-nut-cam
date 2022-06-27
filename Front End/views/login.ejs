@@ -3,25 +3,27 @@
 <% if (messages.error) {%>  <!--Flash sets messages variable, passport-config generates error-->
     <%= messages.error %> 
     <% } %> 
-    
-<div id="login" class="container align-items-center justify-content-center">
-    <h1 class="text-center">Login</h1>
-    <form class="form-group text-center">
-        <div class="mb-3">
-            <label for="email" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password">
-        </div>
-        <a id="passwordForget" href="/passForgot">Forgot password?</a>
-        <br>
-        <a id="register" href="/register">Register</a>
-        <br>
-        <br>
-        <button id="submit" type="submit" class="btn btn-success" >Submit</button>
-    </form>
+
+<div id="control">
+    <div id="box">
+        <h1 class="text-center">Login</h1>
+        <form action="/login" method="POST" class="form-group text-center">
+            <div class="mb-3 container">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="" id="email" name="email" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3 container">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="" id="password" name="password">
+            </div>
+            <a id="passwordForget" href="/passForgot">Forgot password?</a>
+            <br>
+            <a id="register" href="/register">Register</a>
+            <br>
+            <br>
+            <button id="submit" type="submit" class="btn btn-success" >Submit</button>
+        </form>
+    </div>
 </div>
 
 <%- include('partials/footer') %> 

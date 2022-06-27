@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== 'production') { //loads env variables if app not in
 //Required External Modules
 
 const express = require('express')
+const bodyParser = require('body-parser')
 const app = express()
 const path = require('path')
 const bcrypt = require('bcrypt')
@@ -14,13 +15,14 @@ const session = require('express-session')
 const methodOverride = require('method-override')
 
 const initializePassport = require('./passport-config')
+
 initializePassport(
   passport, 
   email => users.find(user => user.email === email),
   id => users.find(user => user.id === id)
 )
 
-//User Setup & Caoture
+//User Setup & Capture
 const users = [] //local var for dev ONLY; will need to redirect registration to database
 
 //Express Public Directory
@@ -36,7 +38,8 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'))
 
 //Takes Inputs from Forms for Post Methods
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
 app.use(flash())
 app.use(session({
@@ -53,7 +56,7 @@ app.get('/', checkAuthenticated, (req, res) => {
     res.render('home')
 })
 
-app.get('/login', checkNotAuthenticated, (req, res) => {
+app.get('/login', checkNotAuthenticated,  (req, res) => {
     res.render('login')
 })
 
@@ -63,12 +66,12 @@ app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
   failureFlash: true
 }))
 
-app.get('/passForgot', (req, res) => {
+app.get('/passForgot', checkAuthenticated, (req, res) => {
     res.render('passForgot')
 })
 
 app.get('/register', checkNotAuthenticated, (req, res) => {
-    res.render('register')
+  res.render('register')
 })
 
 app.post('/register', checkNotAuthenticated, async (req, res) => { //bcrypt is async library
@@ -87,9 +90,11 @@ app.post('/register', checkNotAuthenticated, async (req, res) => { //bcrypt is a
   }
 })
 
-app.delete('/logout', (req, res) => {
-  req.logOut()
-  res.redirect('/login')
+app.delete('/logout', function(req, res, next) {
+  req.logout(function(err) {
+    if (err) { return next(err) }
+    res.redirect('/login')
+  })
 })
 
 function checkAuthenticated(req, res, next) {
@@ -101,7 +106,7 @@ function checkAuthenticated(req, res, next) {
 
 function checkNotAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    return res.redirect('/')
+    res.redirect('/')
   } 
   next()
 }

@@ -1,10 +1,10 @@
-html {
+/* html {
    height: 100%;
 }
 
 body {
-   min-height: 100vh;
-}
+   height: 100%;
+} */
 
 input {
    text-align: center;
@@ -24,7 +24,12 @@ a:hover {
    color: greenyellow;
 }
 
-#login {
+#control {
+   min-height: 100%;
+   height: 90vh;
+}
+
+#box {
    border-color: black;
    border-width: 5px;
    border-style: groove;
@@ -32,7 +37,18 @@ a:hover {
    background-color: #166032;
    color: greenyellow;
    transition: 0.5s;
-   max-width: 540px;
+   max-width: 600px;
+}
+
+#animationBox {
+   border-color: black;
+   border-width: 5px;
+   border-style: groove;
+   padding: 2em;
+   background-color: #166032;
+   color: greenyellow;
+   transition: 0.5s;
+   max-width: 75vh;
 }
 
 .navbar-dark {
@@ -44,5 +60,10 @@ a:hover {
 }
 
 
-
+img {
+   padding-right: 45px;
+   border-width: 5px;
+   border: groove;
+   border-color: black;
+}
 
