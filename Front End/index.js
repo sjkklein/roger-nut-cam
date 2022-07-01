@@ -66,8 +66,12 @@ app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
   failureFlash: true
 }))
 
-app.get('/passForgot', checkAuthenticated, (req, res) => {
+app.get('/passForgot', checkNotAuthenticated, (req, res) => {
     res.render('passForgot')
+})
+
+app.get('/viewPage', checkAuthenticated, (req, res) => {
+    res.render('viewPage')
 })
 
 app.get('/register', checkNotAuthenticated, (req, res) => {

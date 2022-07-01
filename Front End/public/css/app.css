@@ -34,7 +34,7 @@ a:hover {
    border-width: 5px;
    border-style: groove;
    padding: 2em;
-   background-color: #166032;
+   background-color: #198754;
    color: greenyellow;
    transition: 0.5s;
    max-width: 600px;
@@ -45,7 +45,7 @@ a:hover {
    border-width: 5px;
    border-style: groove;
    padding: 2em;
-   background-color: #166032;
+   background-color: #198754;
    color: greenyellow;
    transition: 0.5s;
    max-width: 75vh;
@@ -65,5 +65,14 @@ img {
    border-width: 5px;
    border: groove;
    border-color: black;
+}
+
+body {
+   margin:0;
+   background:url('/rogerAnimations/TempBackground.png');
+   background-size: cover;
+   background-repeat: no-repeat;
+   background-position: center center; 
+   background-color:  #78a05a;
 }
 

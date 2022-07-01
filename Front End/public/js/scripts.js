@@ -19,3 +19,5 @@ const boxes = document.querySelectorAll('#box')
 for (let box of boxes) {
     box.classList.add('container')
 }
+
+//Background Animation
