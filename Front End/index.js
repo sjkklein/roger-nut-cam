@@ -53,7 +53,7 @@ app.use(methodOverride('_method'))
 
 //Get Rendering
 app.get('/', checkAuthenticated, (req, res) => {
-    res.render('home')
+    res.render('home', { name : req.user.fName })
 })
 
 app.get('/login', checkNotAuthenticated,  (req, res) => {

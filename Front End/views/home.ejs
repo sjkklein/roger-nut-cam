@@ -2,16 +2,15 @@
 
 <div id="control">
     <div id="animationBox" class="align-items-center justify-content-center">
-        <h1 class="text-center">Welcome to Roger's Nut Cam</h1>
-
+        <h1 id='welcomeh1' class="text-center">Welcome to Roger's Nut Cam, <%= name %>!</h1>
         <img class="img-fluid" src="rogerAnimations/Roger1.gif" alt="rogie">
-
-        <form action="/logout?_method=DELETE" method="POST" class="form-group text-center">
+        <form action="/logout?_method=DELETE" method="POST" class="form-group text-center align-items-center justify-content-center">
             <button type="submit">Logout</button>
         </form>  
     </div>
 <div>
 
-<script src="/js/home.js"></script>i
+
+<script src="/js/home+view.js"></script>
 
 <%- include('partials/footer') %> 

@@ -8,7 +8,14 @@ for (let input of inputs) {
     input.classList.add('form-control')
 }
 
-//CENTERS DIVS FUCK 
+//Sets all buttons to dark mode
+const buttons = document.querySelectorAll('button')
+
+for (let button of buttons) {
+    button.classList.add('btn-dark')
+}
+
+//CENTERS DIVS FUCK CENTERING DIVS FUCK
 
 const divControls = document.querySelector('#control') 
 
@@ -20,4 +27,4 @@ for (let box of boxes) {
     box.classList.add('container')
 }
 
-//Background Animation
+//Background Animation, to be implemented...
