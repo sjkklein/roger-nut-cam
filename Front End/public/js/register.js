@@ -13,5 +13,4 @@ submit.addEventListener('submit', function() {
         passwordConfirm.val() == null;
         alert('Passwords do not match!')
     }
-    console.log(firstName, lastName, password, passwordConfirm)
 })
