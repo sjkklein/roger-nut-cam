@@ -5,7 +5,6 @@ if (process.env.NODE_ENV !== 'production') { //loads env variables if app not in
 //Required External Modules
 
 const express = require('express')
-const bodyParser = require('body-parser')
 const app = express()
 const path = require('path')
 const bcrypt = require('bcrypt')
@@ -14,6 +13,33 @@ const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
 
+//Database
+require('dotenv').config()
+
+const DB_HOST = process.env.DB_HOST
+const DB_USER = process.env.DB_USER
+const DB_PASSWORD = process.env.DB_PASSWORD
+const DB_DATABASE = process.env.DB_DATABASE
+const DB_PORT = process.env.DB_PORT
+
+const port = process.env.PORT //probably unncessary
+
+const mysql = require("mysql")
+const db = mysql.createPool({
+  connectionLimit: 100,
+  host: DB_HOST,
+  user: DB_USER,
+  password: DB_PASSWORD,
+  database: DB_DATABASE,
+  port: DB_PORT
+})
+
+db.getConnection( (err, connection) => {
+   if (err) throw (err)
+   console.log ("DB connected successful: " + connection.threadId)
+})
+
+//Passport & Passport Config
 const initializePassport = require('./passport-config')
 
 initializePassport(
@@ -23,7 +49,7 @@ initializePassport(
 )
 
 //User Setup & Capture
-const users = [] //local var for dev ONLY; will need to redirect registration to database
+// const users = [] //local var for dev ONLY; will need to redirect registration to database
 
 //Express Public Directory
 app.use(express.static(path.join(__dirname, 'public')))
@@ -37,7 +63,7 @@ app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'))
 
-//Takes Inputs from Forms for Post Methods
+//Takes Inputs from Forms for Post Methods, allows reading of URL and JSON
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
@@ -47,6 +73,7 @@ app.use(session({
   resave: false, //resaves if something has changed in session
   saveUninitialized: false //don't want to save empty values in session
 }))
+
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride('_method'))
@@ -80,13 +107,39 @@ app.get('/register', checkNotAuthenticated, (req, res) => {
 
 app.post('/register', checkNotAuthenticated, async (req, res) => { //bcrypt is async library
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10)   
-    users.push({
+    const hashedPassword = await bcrypt.hash(req.body.password, 10)
+    const user = ({
       id: Date.now().toString(),
       fName: req.body.firstName,
       lName: req.body.lastName,
       email: req.body.email,
       password: hashedPassword
+    })
+    db.getConnection( async (err, connection) => {
+      if (err) throw (err)
+      const sqlSearch = "SELECT * FROM userTable WHERE user = ?"
+      const search_query = mysql.format(sqlSearch,[user])
+      const sqlInsert = "INSERT INTO userTable VALUES (0,?,?)"
+      const insert_query = mysql.format(sqlInsert,[user])
+    })
+    await connection.query (search_query, async (err, result) => {
+      if (err) throw (err)
+      console.log("------> Search Results")
+      console.log(result.length)
+      if (result.length != 0) {
+       connection.release()
+       console.log("------> User already exists")
+       res.sendStatus(409) 
+      } 
+      else {
+       await connection.query (insert_query, (err, result)=> {
+       connection.release()
+       if (err) throw (err)
+       console.log ("--------> Created new User")
+       console.log(result.insertId)
+       res.sendStatus(201)
+        })
+      }
     })
     res.redirect('/login')
   } catch {
@@ -115,6 +168,6 @@ function checkNotAuthenticated(req, res, next) {
   next()
 }
 
-app.listen('3000')
+app.listen(`${port}`, () => {console.log(`listening on ${port}`)})
 
 
