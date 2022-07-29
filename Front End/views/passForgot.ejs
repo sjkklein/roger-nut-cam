@@ -1,0 +1,24 @@
+<%- include('partials/head') %>
+
+<div id="control">
+    <div id="box" class="align-items-center justify-content-center">
+        <h1 class="text-center">Password Recovery</h1>
+        <form class="form-group text-center">
+            <div class="mb-3">
+                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" class="" id="firstName" name="firstName">
+            </div>
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" class="" id="lastName" name="lastName">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="" id="email" name="email">
+            </div>
+            <button id="submit" type="submit" class="btn" href="/tempPass">Submit</button>
+        </form>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
